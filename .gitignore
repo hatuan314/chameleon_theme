@@ -27,3 +27,27 @@ doc/api/
 
 .flutter-plugins
 .flutter-plugins-dependencies
+
+# Flutter Version Manager
+.fvm/
+
+# IDEs
+.idea/
+.vscode/
+
+# AI Coding Assistants (Gemini, Claude, Cursor, Spec Kit)
+.agents/
+.claude/
+.cursor/
+.specify/
+.gemini/
+.serena/
+.scripts/
+specs/
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+
+# Generated files
+*.g.dart
+

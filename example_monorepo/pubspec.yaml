@@ -1,0 +1,16 @@
+name: chameleon_theme_monorepo_root
+description: Root of the Chameleon Theme monorepo.
+version: 1.0.0
+publish_to: 'none'
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  melos: ^6.0.0
+  flutter_test:
+    sdk: flutter

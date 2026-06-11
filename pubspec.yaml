@@ -1,0 +1,29 @@
+name: chameleon_theme
+description: "A Flutter package for tenant-aware, rule-based theme engine supporting multi-tenant white-label apps."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  json_annotation: ^4.9.0
+  shared_preferences: ^2.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.9
+  json_serializable: ^6.8.0
+  custom_lint: ^0.5.7
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/configs/tenants/

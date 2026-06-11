@@ -1,0 +1,10 @@
+name: chameleon_theme_monorepo
+
+packages:
+  - packages/apps/*
+  - packages/features/*
+  - ..
+
+command:
+  bootstrap:
+    usePubspecOverrides: true

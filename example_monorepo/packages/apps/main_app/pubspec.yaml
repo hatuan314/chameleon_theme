@@ -1,0 +1,22 @@
+name: main_app
+description: "Main Application integrating Module A and Module B to test global theme switching."
+version: 1.0.0
+publish_to: 'none'
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.2.2
+  chameleon_theme:
+    path: ../../../..
+  module_a:
+    path: ../../features/module_a
+  module_b:
+    path: ../../features/module_b
+  go_router: ^17.2.3
+
+flutter:
+  uses-material-design: true

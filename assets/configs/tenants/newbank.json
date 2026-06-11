@@ -1,0 +1,36 @@
+{
+  "themes": {
+    "default": {
+      "colors": {
+        "primary": "#E31837",
+        "secondary": "#333333",
+        "surface": "#FFFFFF",
+        "onPrimary": "#FFFFFF"
+      },
+      "typography": {
+        "fontFamily": "Roboto",
+        "fontWeight": 500.0,
+        "fontSize": 15.0
+      },
+      "radii": {
+        "card": 8.0,
+        "button": 4.0
+      },
+      "spacing": {
+        "xs": 5.0,
+        "sm": 10.0,
+        "md": 20.0
+      },
+      "semanticMap": {
+        "buttonBackground": "primary",
+        "buttonForeground": "onPrimary",
+        "cardSurface": "surface",
+        "cardRadius": "card",
+        "buttonRadius": "button"
+      }
+    }
+  },
+  "themeRules": {
+    "default": "default"
+  }
+}

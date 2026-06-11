@@ -1,0 +1,4 @@
+# melos_managed_dependency_overrides: chameleon_theme
+dependency_overrides:
+  chameleon_theme:
+    path: ../../../..

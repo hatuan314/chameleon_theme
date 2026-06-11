@@ -1,0 +1,8 @@
+# melos_managed_dependency_overrides: chameleon_theme,module_a,module_b
+dependency_overrides:
+  chameleon_theme:
+    path: ../../../..
+  module_a:
+    path: ../../features/module_a
+  module_b:
+    path: ../../features/module_b

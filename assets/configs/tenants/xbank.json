@@ -1,0 +1,78 @@
+{
+  "themes": {
+    "default": {
+      "colors": {
+        "primary": "#005BAC",
+        "secondary": "#4A5568",
+        "surface": "#FAFAFA",
+        "onPrimary": "#FFFFFF"
+      },
+      "typography": {
+        "fontFamily": "Inter",
+        "fontWeight": 400.0,
+        "fontSize": 14.0
+      },
+      "radii": {
+        "card": 12.0,
+        "button": 8.0
+      },
+      "spacing": {
+        "xs": 4.0,
+        "sm": 8.0,
+        "md": 16.0
+      },
+      "semanticMap": {
+        "buttonBackground": "primary",
+        "buttonForeground": "onPrimary",
+        "cardSurface": "surface",
+        "cardRadius": "card",
+        "buttonRadius": "button"
+      },
+      "custom": {
+        "promoBannerBg": "#FF5733",
+        "partnerLogoUrl": "assets/images/partner_logo.png",
+        "enablePromo": true
+      }
+    },
+    "vip": {
+      "colors": {
+        "primary": "#D4AF37",
+        "secondary": "#212121",
+        "surface": "#121212",
+        "onPrimary": "#000000"
+      },
+      "typography": {
+        "fontFamily": "Playfair Display",
+        "fontWeight": 700.0,
+        "fontSize": 14.0
+      },
+      "radii": {
+        "card": 16.0,
+        "button": 10.0
+      },
+      "spacing": {
+        "xs": 4.0,
+        "sm": 8.0,
+        "md": 16.0
+      },
+      "semanticMap": {
+        "buttonBackground": "primary",
+        "buttonForeground": "onPrimary",
+        "cardSurface": "surface",
+        "cardRadius": "card",
+        "buttonRadius": "button"
+      },
+      "custom": {
+        "promoBannerBg": "#D4AF37",
+        "partnerLogoUrl": "assets/images/vip_logo.png",
+        "enablePromo": true
+      }
+    }
+  },
+  "theme_rules": {
+    "default": "default",
+    "conditions": {
+      "VIP": "vip"
+    }
+  }
+}

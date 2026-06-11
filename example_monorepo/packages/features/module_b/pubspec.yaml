@@ -1,0 +1,14 @@
+name: module_b
+description: "Feature Module B demonstrating theme updates in response to global changes."
+version: 1.0.0
+publish_to: 'none'
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  go_router: ^17.2.3
+  chameleon_theme:
+    path: ../../../..
