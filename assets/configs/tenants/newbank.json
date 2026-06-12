@@ -30,7 +30,8 @@
       }
     }
   },
-  "themeRules": {
-    "default": "default"
+  "theme_rules": {
+    "default": "default",
+    "conditions": {}
   }
 }

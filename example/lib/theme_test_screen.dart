@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:chameleon_theme/chameleon_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ThemeTestScreen extends StatefulWidget {
   final ThemeService themeService;
@@ -16,6 +18,9 @@ class _ThemeTestScreenState extends State<ThemeTestScreen> {
   // Selected Tenant / Segment states
   String _selectedTenant = 'xbank';
   String _selectedSegment = 'STANDARD';
+
+  final TextEditingController _jsonConfigController = TextEditingController();
+  String? _validationErrorText;
 
   // Local sandbox configurations (pre-loaded from the active theme)
   late Color _buttonBackground;
@@ -63,6 +68,31 @@ class _ThemeTestScreenState extends State<ThemeTestScreen> {
   void initState() {
     super.initState();
     _loadFromActiveTheme();
+    _loadJsonFromAsset(_selectedTenant);
+  }
+
+  @override
+  void dispose() {
+    _jsonConfigController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadJsonFromAsset(String tenantKey) async {
+    try {
+      final jsonString = await rootBundle.loadString(
+        'packages/chameleon_theme/assets/configs/tenants/$tenantKey.json',
+      );
+      final dynamic decoded = json.decode(jsonString);
+      const encoder = JsonEncoder.withIndent('  ');
+      final prettyJson = encoder.convert(decoded);
+      if (!mounted) return;
+      setState(() {
+        _jsonConfigController.text = prettyJson;
+        _validationErrorText = null;
+      });
+    } catch (e) {
+      // Failed to load or format
+    }
   }
 
   void _loadFromActiveTheme() {
@@ -84,7 +114,10 @@ class _ThemeTestScreenState extends State<ThemeTestScreen> {
 
   Future<void> _switchTenant(String tenantKey) async {
     try {
-      final config = await _configService.load(tenantKey);
+      final jsonString = await rootBundle.loadString(
+        'packages/chameleon_theme/assets/configs/tenants/$tenantKey.json',
+      );
+      final config = await _configService.loadFromJsonString(jsonString);
       final registry = TenantThemeRegistry.fromConfig(
         config,
         tenantKey: tenantKey,
@@ -96,6 +129,7 @@ class _ThemeTestScreenState extends State<ThemeTestScreen> {
         _selectedTenant = tenantKey;
         _loadFromActiveTheme();
       });
+      await _loadJsonFromAsset(tenantKey);
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -134,6 +168,111 @@ class _ThemeTestScreenState extends State<ThemeTestScreen> {
         content: Text('Đã áp dụng theme tùy chỉnh thành công!'),
         duration: Duration(seconds: 1),
       ),
+    );
+  }
+
+  Future<void> _applyJsonConfig() async {
+    final rawJson = _jsonConfigController.text.trim();
+    if (rawJson.isEmpty) {
+      setState(() {
+        _validationErrorText = 'JSON không được để trống';
+      });
+      return;
+    }
+
+    try {
+      final config = await _configService.loadFromJsonString(rawJson);
+      final registry = TenantThemeRegistry.fromConfig(
+        config,
+        tenantKey: 'custom_dynamic',
+      );
+      widget.themeService.registry = registry;
+      widget.themeService.applyForUser(UserContext(segment: _selectedSegment));
+      
+      if (!mounted) return;
+      setState(() {
+        _selectedTenant = 'custom';
+        _validationErrorText = null;
+        _loadFromActiveTheme();
+      });
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Đã kiểm tra (Validate) và áp dụng cấu hình JSON thành công!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } on FormatException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _validationErrorText = 'Lỗi cú pháp JSON:\n$e';
+      });
+    } on ValidationException catch (e) {
+      if (!mounted) return;
+      final errorsBuffer = StringBuffer('Cấu hình JSON không hợp lệ:\n');
+      for (final error in e.errors) {
+        errorsBuffer.writeln('- $error');
+      }
+      setState(() {
+        _validationErrorText = errorsBuffer.toString();
+      });
+      _showErrorDialog(e.errors);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _validationErrorText = 'Lỗi không xác định: $e';
+      });
+    }
+  }
+
+  void _showErrorDialog(List<String> errors) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Row(
+            children: [
+              Icon(Icons.error_outline, color: Colors.red),
+              SizedBox(width: 8.0),
+              Text('Lỗi Validation Config'),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Phát hiện các lỗi ràng buộc cấu hình sau đây:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 12.0),
+                ...errors.map((error) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('• ', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                      Expanded(
+                        child: Text(
+                          error,
+                          style: const TextStyle(fontFamily: 'Courier', fontSize: 13.0),
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Đóng'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -584,6 +723,64 @@ class _ThemeTestScreenState extends State<ThemeTestScreen> {
                     setState(() => _promoBannerBg = color);
                   }),
                 ],
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 24.0),
+
+        // 6. Direct JSON Config Editor
+        _buildSectionHeader('6. Chỉnh sửa cấu hình JSON trực tiếp (Dynamic JSON Load)'),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  'Nhập và chỉnh sửa JSON cấu hình theme bên dưới. Hệ thống sẽ sử dụng ConfigValidator để kiểm tra tính hợp lệ trước khi áp dụng.',
+                  style: TextStyle(fontSize: 12.0, color: Colors.black54),
+                ),
+                const SizedBox(height: 12.0),
+                TextField(
+                  controller: _jsonConfigController,
+                  maxLines: 12,
+                  style: const TextStyle(fontFamily: 'Courier', fontSize: 12.0),
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    hintText: 'Nhập JSON cấu hình theme tại đây...',
+                    fillColor: Colors.grey[50],
+                    filled: true,
+                    errorText: _validationErrorText != null ? 'Có lỗi validation (Xem chi tiết bên dưới)' : null,
+                  ),
+                ),
+                if (_validationErrorText != null) ...[
+                  const SizedBox(height: 8.0),
+                  Container(
+                    padding: const EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.red[50],
+                      border: Border.all(color: Colors.red[200]!),
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    child: Text(
+                      _validationErrorText!,
+                      style: TextStyle(color: Colors.red[900], fontSize: 12.0, fontFamily: 'Courier'),
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 12.0),
+                ElevatedButton.icon(
+                  onPressed: _applyJsonConfig,
+                  icon: const Icon(Icons.bolt),
+                  label: const Text('VALIDATE & ÁP DỤNG JSON DỰNG SẴN', style: TextStyle(fontWeight: FontWeight.bold)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue[800],
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                  ),
+                ),
               ],
             ),
           ),

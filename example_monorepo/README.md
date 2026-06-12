@@ -1,6 +1,6 @@
 # Chameleon Theme - Monorepo Demo
 
-This repository demonstrates how to manage a multi-module white-label Flutter application using [Melos](https://melos.invertase.dev) and how the `chameleon_theme` engine propagates real-time theme changes across multiple independent packages.
+This repository demonstrates how to manage a multi-module Flutter application using [Melos](https://melos.invertase.dev) and how the `chameleon_theme` engine propagates real-time theme changes across multiple independent packages.
 
 ## Directory Structure
 
@@ -21,7 +21,7 @@ example_monorepo/
 This demo contains two feature modules and a main runner application:
 1. **`chameleon_theme` (Library Core):** Located at the root of the workspace. It manages the theme state, loading configurations, and emitting changes via `ThemeService` (extends `ChangeNotifier`).
 2. **`module_a` (Feature Module A):** An independent package that contains UI widgets consuming the theme. It exposes buttons to switch user segments (e.g., to `VIP` or `STANDARD`) directly modifying the shared `ThemeService`.
-3. **`module_b` (Feature Module B):** An independent package that only reads and reacts to theme changes. It does not have any control logic. It renders balances and customized promotions dynamically based on `context.appTheme`.
+3. **`module_b` (Feature Module B):** An independent package that only reads and reacts to theme changes. It does not have any control logic. It renders content and customized UI elements dynamically based on `context.appTheme`.
 4. **`main_app` (Main Application):** Integrates both `module_a` and `module_b` into a single screen. It instantiates the `ThemeService` and wraps the `MaterialApp` in a `ListenableBuilder`.
 
 ---

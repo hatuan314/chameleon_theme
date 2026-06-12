@@ -1,5 +1,6 @@
 import 'package:chameleon_theme_example/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:chameleon_theme/chameleon_theme.dart';
 
 void main() async {
@@ -10,7 +11,11 @@ void main() async {
   AppTheme initialTheme = ThemeDefaults.tokens;
 
   try {
-    final config = await configService.load('xbank');
+    // Load config dynamically from a JSON string to showcase the new 002-json-config-loading API.
+    final jsonString = await rootBundle.loadString(
+      'packages/chameleon_theme/assets/configs/tenants/xbank.json',
+    );
+    final config = await configService.loadFromJsonString(jsonString);
     registry = TenantThemeRegistry.fromConfig(config, tenantKey: 'xbank');
 
     final defaultVariant = registry.rules.defaultVariant;

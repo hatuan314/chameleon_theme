@@ -1,13 +1,13 @@
 # Chameleon Theme Engine
 
-A flexible, rule-based, multi-tenant theme engine for Flutter white-label apps. It allows raw brand values to be parsed dynamically from declarative JSON configurations and maps them to semantic UI roles that widgets consume via a `BuildContext` extension. It also supports runtime theme variant switching (e.g., Standard to VIP) based on authenticated user segments with local storage persistence and dynamic custom theme extensions.
+A flexible, rule-based, multi-tenant theme engine for Flutter apps. It allows raw brand values to be parsed dynamically from declarative JSON configurations and maps them to semantic UI roles that widgets consume via a `BuildContext` extension. It also supports runtime theme variant switching (e.g., `default` to `premium`) based on user segments with local storage persistence and dynamic custom theme extensions.
 
 ---
 
 ## Features
 
 - **Declarative Onboarding**: Onboard a new tenant by adding a single JSON file without changing any widget code.
-- **Rule-Based Runtime Switching**: Instantly switch theme variants (e.g., `default` to `vip`) when user segments are determined, with immediate transition-free UI updates.
+- **Rule-Based Runtime Switching**: Instantly switch theme variants (e.g., `default` to `premium`) when user segments are determined, with immediate transition-free UI updates.
 - **Strict Widget Isolation**: Prevents raw color and spacing literals in widget code using automated compliance checks. Widgets only consume named semantic roles.
 - **Robust Per-Token Fallback**: Missing or malformed individual tokens degrade gracefully to safe neutral monochrome defaults, logging details without crashing.
 - **Dynamic Custom Extensions**: Query arbitrary, non-standard configs inside the tenant JSON through type-safe dynamic lookups.
@@ -20,8 +20,8 @@ A flexible, rule-based, multi-tenant theme engine for Flutter white-label apps. 
 ```text
 chameleon_theme/
 ├── assets/configs/tenants/     # Bundled tenant configuration files
-│   ├── xbank.json              # Bank X configuration (default + VIP variants)
-│   └── newbank.json            # Bank New configuration
+│   ├── xbank.json              # Demo tenant — default + premium variants
+│   └── newbank.json            # Demo tenant — alternative brand
 ├── lib/
 │   ├── chameleon_theme.dart    # Gói export chính
 │   └── features/theme/
@@ -50,9 +50,9 @@ chameleon_theme/
 
 ## Onboarding a New Tenant
 
-To configure a new tenant (e.g., `mybank`):
+To configure a new tenant (e.g., `mybrand`):
 
-1. **Add Tenant Config JSON**: Create `assets/configs/tenants/mybank.json` and declare the variants, rule mapping, and semantic map:
+1. **Add Tenant Config JSON**: Create `assets/configs/tenants/mybrand.json` and declare the variants, rule mapping, and semantic map:
 
 ```json
 {
@@ -223,6 +223,28 @@ final bool enablePromo = theme.customValue<bool>('enablePromo') ?? false;
 final Color? promoBg = theme.customColor('promoBannerBg');
 ```
 *Note: `theme.customColor` is a helper extension on `AppTheme` that safely parses hex color strings. Non-existent keys or type-mismatches will return `null` without crashing.*
+
+### ⚠️ Security Note: Custom Block is Untrusted When Config is Remote
+
+The `custom` block is **not validated** by `ConfigValidator`. If your application loads theme configuration from a remote API (using `loadFromJson` or `loadFromJsonString`), values inside the `custom` block are **untrusted user input** and must be validated before use:
+
+- **For URLs** (e.g., `partnerLogoUrl`): Use an allowlist of domains or validate the URL scheme before passing to `Image.network`, `Image.asset`, or any HTTP client. Prevent `file://` and `data://` schemes which can access local files or inline data.
+- **For file paths** (e.g., asset paths): Validate against an allowlist to prevent path traversal (`../../`).
+- **For dynamic code or templates**: Never eval or compile user-provided strings.
+
+Example — safe usage of a remote logo URL:
+
+```dart
+final logoUrl = theme.customValue<String>('partnerLogoUrl') ?? '';
+if (logoUrl.startsWith('https://') && Uri.tryParse(logoUrl) != null) {
+  Image.network(logoUrl);
+} else {
+  // Fallback or error handling
+  SizedBox.shrink();
+}
+```
+
+If your config comes from a bundled asset only (not remote), the `custom` block is implicitly trusted.
 
 ---
 
