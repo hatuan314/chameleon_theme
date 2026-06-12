@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="meta.title">Chameleon Theme Engine</title>
+  <!-- Google Fonts Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <style>
+    /* CSS Custom Properties - Catppuccin Mocha Palette */
+    :root {
+      --bg: #1e1e2e;
+      --surface: #181825;
+      --surface2: #313244;
+      --text: #cdd6f4;
+      --subtext: #a6adc8;
+      --blue: #89b4fa;
+      --purple: #cba6f7;
+      --green: #a6e3a1;
+      --yellow: #f9e2af;
+      --red: #f38ba8;
+      --orange: #fab387;
+      --border: #45475a;
+      
+      --transition-speed: 0.2s;
+    }
+
+    /* Base Reset & Styles */
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+
+    /* Layout Structure */
+    .layout {
+      display: flex;
+      flex-direction: row;
+      min-height: 100vh;
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      position: sticky;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      overflow-y: auto;
+      background-color: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .nav-logo {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--purple);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      flex-grow: 1;
+    }
+
+    .nav-item, .nav-sub {
+      color: var(--subtext);
+      text-decoration: none;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      transition: all var(--transition-speed);
+      font-size: 0.95rem;
+    }
+
+    .nav-item:hover, .nav-sub:hover {
+      color: var(--text);
+      background-color: var(--surface2);
+    }
+
+    .nav-item.active {
+      color: var(--blue);
+      background-color: var(--surface2);
+      font-weight: 600;
+    }
+
+    .nav-sub {
+      padding-left: 1.75rem;
+      font-size: 0.85rem;
+    }
+
+    .nav-sub.active {
+      color: var(--blue);
+    }
+
+    .lang-toggle-container {
+      margin-top: auto;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    #lang-toggle, #lang-toggle-mobile {
+      background-color: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all var(--transition-speed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+    }
+
+    #lang-toggle:hover, #lang-toggle-mobile:hover {
+      background-color: var(--border);
+      color: var(--purple);
+    }
+
+    /* Content Area */
+    .content {
+      flex: 1;
+      padding: 2.5rem;
+      min-width: 0;
+      max-width: 1012px;
+      margin: 0 auto;
+    }
+
+    section {
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    section:last-of-type {
+      border-bottom: none;
+    }
+
+    h1, h2, h3, h4 {
+      color: var(--blue);
+      font-weight: 600;
+      margin-top: 0;
+    }
+
+    h1 {
+      font-size: clamp(1.75rem, 5vw, 2.5rem);
+      color: var(--purple);
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      margin-bottom: 1.5rem;
+    }
+
+    h3 {
+      font-size: clamp(1.15rem, 3vw, 1.35rem);
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 1.25rem;
+      color: var(--text);
+    }
+
+    ul, ol {
+      margin-top: 0;
+      margin-bottom: 1.25rem;
+      padding-left: 1.5rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      max-width: 100%;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background-color: var(--surface);
+      color: var(--purple);
+      font-weight: 600;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Code & Syntax Highlighting */
+    pre {
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.25rem;
+      overflow-x: auto;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+
+    code {
+      font-family: 'JetBrains Mono', SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.875rem;
+      background-color: var(--surface);
+      color: var(--green);
+      border-radius: 4px;
+    }
+    
+    pre code {
+      background-color: transparent;
+      color: var(--text);
+      padding: 0;
+      border-radius: 0;
+    }
+
+    /* Syntax Highlighting Colors */
+    .kw { color: var(--purple); font-weight: 600; } /* Keyword */
+    .str { color: var(--green); }                   /* String */
+    .cm { color: #6c7086; font-style: italic; }     /* Comment */
+    .num { color: var(--orange); }                  /* Numeric */
+    .fn { color: var(--blue); }                     /* Function */
+
+    /* Mobile Headers */
+    .mobile-bar {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3.5rem;
+      background-color: var(--surface);
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+      padding: 0 1rem;
+      z-index: 150;
+      justify-content: space-between;
+    }
+
+    .mobile-title {
+      font-weight: 600;
+      color: var(--purple);
+      font-size: 1.1rem;
+    }
+
+    #hamburger-btn {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #lang-toggle-mobile {
+      width: auto;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: 100;
+      backdrop-filter: blur(2px);
+    }
+
+    /* SVG Styling */
+    #architecture-diagram {
+      display: block;
+      margin: 2rem auto;
+      max-width: 100%;
+      height: auto;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    /* Responsive Design Breakpoints */
+    @media (max-width: 1023px) {
+      .sidebar {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 200;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        animation: slideIn 0.25s ease-out;
+      }
+
+      .sidebar.open {
+        display: flex;
+      }
+
+      .mobile-bar {
+        display: flex;
+      }
+
+      .content {
+        padding-top: 5rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      .overlay.active {
+        display: block;
+      }
+    }
+
+    /* Narrow viewport (320px) styling */
+    @media (max-width: 359px) {
+      .content {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      h2 {
+        font-size: 1.25rem;
+      }
+
+      pre, .table-container {
+        padding: 0.75rem;
+      }
+
+      code {
+        font-size: 0.75rem;
+      }
+    }
+
+    /* Print media style */
+    @media print {
+      body {
+        background-color: #ffffff;
+        color: #000000;
+        font-size: 12pt;
+      }
+
+      .sidebar, .mobile-bar, .overlay, #lang-toggle, #lang-toggle-mobile {
+        display: none !important;
+      }
+
+      .layout {
+        display: block;
+      }
+
+      .content {
+        padding: 0;
+        margin: 0;
+        max-width: 100%;
+      }
+
+      section {
+        page-break-inside: avoid;
+        border-bottom: 1px solid #ccc;
+      }
+
+      h1, h2, h3 {
+        color: #000000 !important;
+      }
+
+      pre {
+        background-color: #f5f5f5;
+        border: 1px solid #ccc;
+        color: #000000;
+        page-break-inside: avoid;
+      }
+
+      code {
+        background-color: #f5f5f5;
+        color: #000000;
+      }
+
+      #architecture-diagram {
+        background-color: #ffffff;
+        border: 1px solid #ccc;
+        page-break-inside: avoid;
+      }
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="nav-logo" data-i18n="meta.title">Chameleon Theme</div>
+      <nav class="nav-links">
+        <a class="nav-item" href="#readme" data-i18n="nav.readme">README</a>
+        <a class="nav-item" href="#solution" data-i18n="nav.solution">Solution</a>
+        
+        <a class="nav-sub" href="#solution-config-service" data-i18n="nav.solution_config_service">ConfigService</a>
+        <a class="nav-sub" href="#solution-app-tokens" data-i18n="nav.solution_app_tokens">AppTokens</a>
+        <a class="nav-sub" href="#solution-app-theme" data-i18n="nav.solution_app_theme">AppTheme</a>
+        <a class="nav-sub" href="#solution-tenant-registry" data-i18n="nav.solution_tenant_registry">TenantThemeRegistry</a>
+        <a class="nav-sub" href="#solution-theme-rules" data-i18n="nav.solution_theme_rules">ThemeRules</a>
+        <a class="nav-sub" href="#solution-theme-service" data-i18n="nav.solution_theme_service">ThemeService</a>
+        
+        <a class="nav-item" href="#workflow" data-i18n="nav.workflow">Workflow</a>
+      </nav>
+      <div class="lang-toggle-container">
+        <button id="lang-toggle" aria-label="Switch to Vietnamese">
+          <span data-i18n="meta.lang_toggle_en">EN</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="content" id="main-content">
+      <h1 data-i18n="meta.title">Chameleon Theme Engine</h1>
+      
+      <section id="readme">
+        <h2 data-i18n="readme.title">Project Overview</h2>
+        
+        <div id="readme-overview">
+          <p data-i18n="readme.overview.intro">A flexible, rule-based, multi-tenant theme engine for Flutter apps...</p>
+        </div>
+
+        <div id="readme-features">
+          <h3 data-i18n="readme.features.title">Key Features</h3>
+          <ul>
+            <li data-i18n="readme.features.1">Declarative Onboarding</li>
+            <li data-i18n="readme.features.2">Rule-Based Runtime Switching</li>
+            <li data-i18n="readme.features.3">Strict Widget Isolation</li>
+            <li data-i18n="readme.features.4">Robust Per-Token Fallback</li>
+            <li data-i18n="readme.features.5">Dynamic Custom Extensions</li>
+            <li data-i18n="readme.features.6">Persisted State</li>
+          </ul>
+        </div>
+
+        <div id="readme-dir">
+          <p data-i18n="readme.dir.intro">Below is the directory structure showing how the Chameleon Theme Engine is organized:</p>
+          <pre><code>chameleon_theme/
+├── assets/configs/tenants/     # Bundled tenant configuration files
+│   ├── xbank.json              # Demo tenant — default + premium variants
+│   └── newbank.json            # Demo tenant — alternative brand
+├── lib/
+│   ├── chameleon_theme.dart    # Main package export file
+│   └── features/theme/
+│       ├── data/
+│       │   ├── config_service.dart      # Loads and decodes tenant JSON assets
+│       │   └── theme_config.dart        # JSON-serializable envelope models
+│       ├── domain/
+│       │   ├── app_tokens.dart          # Raw primitive design tokens
+│       │   ├── app_theme.dart           # Semantic role layer (ThemeExtension)
+│       │   ├── theme_rules.dart         # Segment to variant mapping resolver
+│       │   ├── tenant_theme_registry.dart # Variant registry
+│       │   └── user_context.dart        # User segment context wrapper
+│       └── presentation/
+│           ├── theme_service.dart       # ChangeNotifier orchestrator
+│           ├── app_theme_x.dart         # BuildContext extensions and helpers
+│           └── theme_defaults.dart      # Safe fallback design tokens
+├── example/                     # Example app showcasing runtime switching
+│   ├── lib/main.dart            # Bootstrap, manual DI, and interactive dashboard
+│   └── test/widget_test.dart    # Smoke test for example app
+└── test/
+    ├── unit/                    # Unit tests for domain parsing & compliance
+    └── widget/                  # Widget tests for runtime theme switching</code></pre>
+        </div>
+
+        <div id="readme-onboarding">
+          <h3 data-i18n="readme.onboarding.title">Onboarding a New Tenant</h3>
+          <p data-i18n="readme.onboarding.intro">To configure a new tenant (e.g., mybrand):</p>
+          
+          <p data-i18n="readme.onboarding.step1">1. Add Tenant Config JSON: Create assets/configs/tenants/mybrand.json...</p>
+          <pre><code>{
+  <span class="kw">"themes"</span>: {
+    <span class="kw">"default"</span>: {
+      <span class="kw">"colors"</span>: {
+        <span class="kw">"primary"</span>: <span class="str">"#005BAC"</span>,
+        <span class="kw">"secondary"</span>: <span class="str">"#4A5568"</span>,
+        <span class="kw">"surface"</span>: <span class="str">"#FAFAFA"</span>,
+        <span class="kw">"onPrimary"</span>: <span class="str">"#FFFFFF"</span>
+      },
+      <span class="kw">"typography"</span>: {
+        <span class="kw">"fontFamily"</span>: <span class="str">"Inter"</span>,
+        <span class="kw">"fontWeight"</span>: <span class="num">400.0</span>,
+        <span class="kw">"fontSize"</span>: <span class="num">14.0</span>
+      },
+      <span class="kw">"radii"</span>: {
+        <span class="kw">"card"</span>: <span class="num">12.0</span>,
+        <span class="kw">"button"</span>: <span class="num">8.0</span>
+      },
+      <span class="kw">"spacing"</span>: {
+        <span class="kw">"xs"</span>: <span class="num">4.0</span>,
+        <span class="kw">"sm"</span>: <span class="num">8.0</span>,
+        <span class="kw">"md"</span>: <span class="num">16.0</span>
+      },
+      <span class="kw">"semanticMap"</span>: {
+        <span class="kw">"buttonBackground"</span>: <span class="str">"primary"</span>,
+        <span class="kw">"buttonForeground"</span>: <span class="str">"onPrimary"</span>,
+        <span class="kw">"cardSurface"</span>: <span class="str">"surface"</span>,
+        <span class="kw">"cardRadius"</span>: <span class="str">"card"</span>,
+        <span class="kw">"buttonRadius"</span>: <span class="str">"button"</span>
+      }
+    }
+  },
+  <span class="kw">"themeRules"</span>: {
+    <span class="kw">"default"</span>: <span class="str">"default"</span>
+  }
+}</code></pre>
+
+          <p data-i18n="readme.onboarding.step2">2. Register Asset: Make sure the assets directory is declared in the root pubspec.yaml:</p>
+          <pre><code><span class="kw">flutter</span>:
+  <span class="kw">assets</span>:
+    - assets/configs/tenants/ <span class="cm"># Register tenant folder</span></code></pre>
+        </div>
+
+        <div id="readme-usage">
+          <h3 data-i18n="readme.usage.title">Usage Guidelines</h3>
+          
+          <p data-i18n="readme.usage.bootstrap">1. Bootstrapping (Dependency Injection): Initialize the theme engine at application startup in your main() method:</p>
+          <p data-i18n="readme.usage.wrapping">2. Wrapping your App: Expose the ThemeService through a ListenableBuilder to trigger rebuilds on variant changes:</p>
+          
+          <p data-i18n="readme.usage.consuming">3. Consuming Semantic Roles in Widgets: To prevent coupling widgets to raw values, never hardcode colors. Import the theme engine package and consume named semantic roles via context.appTheme:</p>
+          <pre><code><span class="kw">import</span> <span class="str">'package:chameleon_theme/chameleon_theme.dart'</span>;
+
+<span class="kw">Widget</span> <span class="fn">build</span>(<span class="kw">BuildContext</span> context) {
+  <span class="kw">final</span> theme = context.<span class="fn">appTheme</span>;
+
+  <span class="kw">return</span> <span class="fn">Container</span>(
+    padding: <span class="kw">EdgeInsets</span>.<span class="fn">all</span>(theme.cardRadius),
+    decoration: <span class="fn">BoxDecoration</span>(
+      color: theme.cardSurface,
+      borderRadius: <span class="kw">BorderRadius</span>.<span class="fn">circular</span>(theme.cardRadius),
+      border: <span class="kw">BorderSide</span>(color: theme.inputBorder),
+    ),
+    child: <span class="fn">ElevatedButton</span>(
+      style: <span class="fn">ElevatedButton</span>.<span class="fn">styleFrom</span>(
+        backgroundColor: theme.buttonBackground,
+        foregroundColor: theme.buttonForeground,
+        shape: <span class="fn">RoundedRectangleBorder</span>(
+          borderRadius: <span class="kw">BorderRadius</span>.<span class="fn">circular</span>(theme.buttonRadius),
+        ),
+      ),
+      onPressed: () {},
+      child: <span class="fn">Text</span>(
+        <span class="str">'Submit'</span>,
+        style: <span class="fn">TextStyle</span>(
+          fontFamily: theme.fontFamily,
+          fontSize: theme.fontSize,
+        ),
+      ),
+    ),
+  );
+}</code></pre>
+        </div>
+      </section>
+      <section id="solution">
+        <h2 data-i18n="solution.title">Solution Architecture</h2>
+        
+        <div id="solution-overview">
+          <p data-i18n="solution.overview.intro">The Chameleon Theme Engine implements a robust 3-layer pipeline...</p>
+        </div>
+
+        <div id="solution-diagram">
+          <svg id="architecture-diagram" viewBox="0 0 740 340" xmlns="http://www.w3.org/2000/svg" role="img" data-i18n="solution.diagram.aria_label">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 2 L 8 5 L 0 8 z" fill="#a6adc8" />
+              </marker>
+            </defs>
+
+            <!-- Background Lanes -->
+            <!-- Data Layer Lane -->
+            <rect x="10" y="10" width="720" height="90" rx="8" fill="#89b4fa" fill-opacity="0.05" stroke="#45475a" stroke-dasharray="4" />
+            <text x="20" y="30" fill="#89b4fa" font-family="monospace" font-size="11" font-weight="bold" data-i18n="solution.diagram.layer_data">Data Layer (Parsing)</text>
+
+            <!-- Domain Layer Lane -->
+            <rect x="10" y="115" width="720" height="110" rx="8" fill="#cba6f7" fill-opacity="0.05" stroke="#45475a" stroke-dasharray="4" />
+            <text x="20" y="135" fill="#cba6f7" font-family="monospace" font-size="11" font-weight="bold" data-i18n="solution.diagram.layer_domain">Domain Layer (Resolution)</text>
+
+            <!-- Presentation Layer Lane -->
+            <rect x="10" y="240" width="720" height="90" rx="8" fill="#a6e3a1" fill-opacity="0.05" stroke="#45475a" stroke-dasharray="4" />
+            <text x="20" y="260" fill="#a6e3a1" font-family="monospace" font-size="11" font-weight="bold" data-i18n="solution.diagram.layer_presentation">Presentation Layer (Consumption)</text>
+
+            <!-- Connections / Edges -->
+            <!-- JSON -> ConfigService -->
+            <line x1="120" y1="65" x2="149" y2="65" stroke="#45475a" stroke-width="2" marker-end="url(#arrow)" />
+            <!-- ConfigService -> ThemeConfig -->
+            <line x1="270" y1="65" x2="299" y2="65" stroke="#45475a" stroke-width="2" marker-end="url(#arrow)" />
+            <!-- ThemeConfig -> TenantThemeRegistry -->
+            <path d="M 360 83 L 360 100 L 210 100 L 210 139" fill="none" stroke="#45475a" stroke-width="2" marker-end="url(#arrow)" />
+            <!-- ThemeConfig -> AppTokens -->
+            <path d="M 360 83 L 360 100 L 510 100 L 510 139" fill="none" stroke="#45475a" stroke-width="2" marker-end="url(#arrow)" />
+            <!-- TenantThemeRegistry <-> ThemeRules -->
+            <line x1="280" y1="165" x2="319" y2="165" stroke="#45475a" stroke-width="2" marker-end="url(#arrow)" />
+            <line x1="320" y1="180" x2="281" y2="180" stroke="#45475a" stroke-width="2" marker-end="url(#arrow)" />
+            <!-- AppTokens -> AppTheme -->
+            <line x1="560" y1="172" x2="589" y2="172" stroke="#45475a" stroke-width="2" marker-end="url(#arrow)" />
+            <!-- AppTheme -> ThemeService -->
+            <path d="M 645 190 L 645 220 L 510 220 L 510 249" fill="none" stroke="#45475a" stroke-width="2" marker-end="url(#arrow)" />
+            <!-- TenantThemeRegistry -> ThemeService -->
+            <path d="M 210 190 L 210 220 L 450 220 L 450 249" fill="none" stroke="#45475a" stroke-dasharray="4" stroke-width="2" marker-end="url(#arrow)" />
+            <!-- ThemeService -> context.appTheme -->
+            <line x1="420" y1="285" x2="389" y2="285" stroke="#45475a" stroke-width="2" marker-end="url(#arrow)" />
+            <!-- context.appTheme -> Widgets -->
+            <line x1="250" y1="285" x2="209" y2="285" stroke="#45475a" stroke-width="2" marker-end="url(#arrow)" />
+
+            <!-- Nodes -->
+            <!-- Data Layer Nodes -->
+            <g>
+              <rect x="20" y="47" width="100" height="36" rx="6" fill="#89b4fa" stroke="#1e1e2e" stroke-width="1.5" />
+              <text x="70" y="69" fill="#1e1e2e" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">JSON Asset</text>
+            </g>
+            <g>
+              <rect x="150" y="47" width="120" height="36" rx="6" fill="#89b4fa" stroke="#1e1e2e" stroke-width="1.5" />
+              <text x="210" y="69" fill="#1e1e2e" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">ConfigService</text>
+            </g>
+            <g>
+              <rect x="300" y="47" width="120" height="36" rx="6" fill="#89b4fa" stroke="#1e1e2e" stroke-width="1.5" />
+              <text x="360" y="69" fill="#1e1e2e" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">ThemeConfig</text>
+            </g>
+
+            <!-- Domain Layer Nodes -->
+            <g>
+              <rect x="120" y="147" width="160" height="42" rx="6" fill="#cba6f7" stroke="#1e1e2e" stroke-width="1.5" />
+              <text x="200" y="172" fill="#1e1e2e" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">TenantRegistry</text>
+            </g>
+            <g>
+              <rect x="320" y="147" width="110" height="42" rx="6" fill="#cba6f7" stroke="#1e1e2e" stroke-width="1.5" />
+              <text x="375" y="172" fill="#1e1e2e" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">ThemeRules</text>
+            </g>
+            <g>
+              <rect x="450" y="150" width="110" height="36" rx="6" fill="#cba6f7" stroke="#1e1e2e" stroke-width="1.5" />
+              <text x="505" y="172" fill="#1e1e2e" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">AppTokens</text>
+            </g>
+            <g>
+              <rect x="590" y="150" width="110" height="36" rx="6" fill="#cba6f7" stroke="#1e1e2e" stroke-width="1.5" />
+              <text x="640" y="172" fill="#1e1e2e" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">AppTheme</text>
+            </g>
+
+            <!-- Presentation Layer Nodes -->
+            <g>
+              <rect x="420" y="267" width="120" height="36" rx="6" fill="#a6e3a1" stroke="#1e1e2e" stroke-width="1.5" />
+              <text x="480" y="289" fill="#1e1e2e" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">ThemeService</text>
+            </g>
+            <g>
+              <rect x="250" y="267" width="140" height="36" rx="6" fill="#a6e3a1" stroke="#1e1e2e" stroke-width="1.5" />
+              <text x="320" y="289" fill="#1e1e2e" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">context.appTheme</text>
+            </g>
+            <g>
+              <rect x="120" y="267" width="90" height="36" rx="6" fill="#a6e3a1" stroke="#1e1e2e" stroke-width="1.5" />
+              <text x="165" y="289" fill="#1e1e2e" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">Widgets</text>
+            </g>
+          </svg>
+          <p class="diagram-caption" style="text-align: center; font-style: italic; color: var(--subtext); margin-top: -1rem; font-size: 0.9rem;" data-i18n="solution.diagram.caption">Figure 1: Token resolution pipeline from JSON asset to widget consumption.</p>
+        </div>
+
+        <div id="solution-config-service" class="solution-section">
+          <h3 data-i18n="solution.config_service.title">ConfigService</h3>
+          <p data-i18n="solution.config_service.role">Role: Responsible for loading and decoding...</p>
+          <p data-i18n="solution.config_service.inputs">Inputs: ...</p>
+          <p data-i18n="solution.config_service.outputs">Outputs: ...</p>
+          <p data-i18n="solution.config_service.behaviors">Key Behaviors: ...</p>
+        </div>
+
+        <div id="solution-app-tokens" class="solution-section">
+          <h3 data-i18n="solution.app_tokens.title">AppTokens</h3>
+          <p data-i18n="solution.app_tokens.role">Role: ...</p>
+          <p data-i18n="solution.app_tokens.inputs">Inputs: ...</p>
+          <p data-i18n="solution.app_tokens.outputs">Outputs: ...</p>
+          <p data-i18n="solution.app_tokens.behaviors">Key Behaviors: ...</p>
+        </div>
+
+        <div id="solution-app-theme" class="solution-section">
+          <h3 data-i18n="solution.app_theme.title">AppTheme</h3>
+          <p data-i18n="solution.app_theme.role">Role: ...</p>
+          <p data-i18n="solution.app_theme.inputs">Inputs: ...</p>
+          <p data-i18n="solution.app_theme.outputs">Outputs: ...</p>
+          <p data-i18n="solution.app_theme.behaviors">Key Behaviors: ...</p>
+        </div>
+
+        <div id="solution-tenant-registry" class="solution-section">
+          <h3 data-i18n="solution.tenant_registry.title">TenantThemeRegistry</h3>
+          <p data-i18n="solution.tenant_registry.role">Role: ...</p>
+          <p data-i18n="solution.tenant_registry.inputs">Inputs: ...</p>
+          <p data-i18n="solution.tenant_registry.outputs">Outputs: ...</p>
+          <p data-i18n="solution.tenant_registry.behaviors">Key Behaviors: ...</p>
+        </div>
+
+        <div id="solution-theme-rules" class="solution-section">
+          <h3 data-i18n="solution.theme_rules.title">ThemeRules</h3>
+          <p data-i18n="solution.theme_rules.role">Role: ...</p>
+          <p data-i18n="solution.theme_rules.inputs">Inputs: ...</p>
+          <p data-i18n="solution.theme_rules.outputs">Outputs: ...</p>
+          <p data-i18n="solution.theme_rules.behaviors">Key Behaviors: ...</p>
+          
+          <pre><code>{
+  <span class="kw">"default"</span>: <span class="str">"default"</span>,
+  <span class="kw">"conditions"</span>: {
+    <span class="kw">"segment"</span>: <span class="str">"premium"</span>
+  }
+}</code></pre>
+        </div>
+
+        <div id="solution-theme-service" class="solution-section">
+          <h3 data-i18n="solution.theme_service.title">ThemeService</h3>
+          <p data-i18n="solution.theme_service.role">Role: ...</p>
+          <p data-i18n="solution.theme_service.inputs">Inputs: ...</p>
+          <p data-i18n="solution.theme_service.outputs">Outputs: ...</p>
+          <p data-i18n="solution.theme_service.behaviors">Key Behaviors: ...</p>
+        </div>
+
+        <div id="solution-fallback" class="solution-section">
+          <h3 data-i18n="solution.fallback.title">Fallback Strategy</h3>
+          <p data-i18n="solution.fallback.intro">Fallback details...</p>
+        </div>
+
+        <div id="solution-multi-tenant" class="solution-section">
+          <h3 data-i18n="solution.multi_tenant.title">Multi-Tenant Resolution</h3>
+          <p data-i18n="solution.multi_tenant.intro">Resolution details...</p>
+        </div>
+      </section>
+      <section id="workflow">
+        <h2 data-i18n="workflow.title">Development Workflow</h2>
+        <p data-i18n="workflow.intro">This section outlines the common terminal commands and contribution policies...</p>
+        
+        <dl>
+          <dt><code>fvm flutter pub get</code></dt>
+          <dd data-i18n="workflow.commands.pub_get">Install Flutter package dependencies.</dd>
+          
+          <dt><code>fvm dart run build_runner build --delete-conflicting-outputs</code></dt>
+          <dd data-i18n="workflow.commands.build_runner">Regenerate JSON serialization code.</dd>
+          
+          <dt><code>fvm flutter test</code></dt>
+          <dd data-i18n="workflow.commands.test">Run all tests.</dd>
+          
+          <dt><code>fvm flutter analyze</code></dt>
+          <dd data-i18n="workflow.commands.analyze">Run static code analysis.</dd>
+          
+          <dt><code>cd example && fvm flutter run</code></dt>
+          <dd data-i18n="workflow.commands.run_example">Run the showcase interactive app.</dd>
+        </dl>
+
+        <div id="workflow-precommit">
+          <h3 data-i18n="workflow.precommit.title">Pre-Commit Checks</h3>
+          <ul>
+            <li data-i18n="workflow.precommit.rule1">No ! operators in Dart code.</li>
+            <li data-i18n="workflow.precommit.rule2">No print calls.</li>
+            <li data-i18n="workflow.precommit.rule3">No raw Color literals outside theme library.</li>
+            <li data-i18n="workflow.precommit.rule4">Static analysis must pass with zero errors.</li>
+            <li data-i18n="workflow.precommit.rule5">All tests must pass.</li>
+          </ul>
+        </div>
+
+        <div id="workflow-prohibitions">
+          <h3 data-i18n="workflow.prohibitions.title">Prohibited Practices & Enforcement</h3>
+          <ul>
+            <li data-i18n="workflow.prohibitions.bang"><strong>No Force Unwraps (!):</strong> Sound null safety must be maintained...</li>
+            <li data-i18n="workflow.prohibitions.print"><strong>No Raw print():</strong> Use dart:developer log()...</li>
+            <li data-i18n="workflow.prohibitions.color"><strong>No Hardcoded Colors:</strong> Widgets must only consume semantic roles...</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Mobile Top Bar -->
+  <header class="mobile-bar" id="mobile-bar">
+    <button id="hamburger-btn" aria-label="Open navigation">☰</button>
+    <span class="mobile-title" data-i18n="meta.title">Chameleon Theme</span>
+    <button id="lang-toggle-mobile" aria-label="Switch to Vietnamese">EN</button>
+  </header>
+
+  <!-- Mobile Overlay Backdrop -->
+  <div class="overlay" id="overlay"></div>
+
+  <script>
+    // i18n Translation Object Shell
+    const translations = {
+      en: {
+        "meta.title": "Chameleon Theme Engine",
+        "meta.description": "Bilingual developer documentation for the Chameleon Theme Engine.",
+        "meta.lang_toggle_en": "EN",
+        "meta.lang_toggle_vi": "VI",
+        "nav.readme": "README",
+        "nav.solution": "Solution",
+        "nav.workflow": "Workflow",
+        "nav.solution_config_service": "ConfigService",
+        "nav.solution_app_tokens": "AppTokens",
+        "nav.solution_app_theme": "AppTheme",
+        "nav.solution_tenant_registry": "TenantThemeRegistry",
+        "nav.solution_theme_rules": "ThemeRules",
+        "nav.solution_theme_service": "ThemeService",
+        
+        "readme.title": "Project Overview",
+        "readme.overview.intro": "A flexible, rule-based, multi-tenant theme engine for Flutter apps. It allows raw brand values to be parsed dynamically from declarative JSON configurations and maps them to semantic UI roles that widgets consume via a BuildContext extension. It also supports runtime theme variant switching (e.g., default to premium) based on user segments with local storage persistence and dynamic custom theme extensions.",
+        "readme.features.title": "Key Features",
+        "readme.features.1": "Declarative Onboarding: Onboard a new tenant by adding a single JSON file without changing any widget code.",
+        "readme.features.2": "Rule-Based Runtime Switching: Instantly switch theme variants (e.g., default to premium) when user segments are determined, with immediate transition-free UI updates.",
+        "readme.features.3": "Strict Widget Isolation: Prevents raw color and spacing literals in widget code using automated compliance checks. Widgets only consume named semantic roles.",
+        "readme.features.4": "Robust Per-Token Fallback: Missing or malformed individual tokens degrade gracefully to safe neutral monochrome defaults, logging details without crashing.",
+        "readme.features.5": "Dynamic Custom Extensions: Query arbitrary, non-standard configs inside the tenant JSON through type-safe dynamic lookups.",
+        "readme.features.6": "Persisted State: Automatically stores and restores the active variant key using shared_preferences.",
+        "readme.dir.intro": "Below is the directory structure showing how the Chameleon Theme Engine is organized:",
+        "readme.onboarding.title": "Onboarding a New Tenant",
+        "readme.onboarding.intro": "To configure a new tenant (e.g., mybrand):",
+        "readme.onboarding.step1": "1. Add Tenant Config JSON: Create assets/configs/tenants/mybrand.json and declare the variants, rule mapping, and semantic map:",
+        "readme.onboarding.step2": "2. Register Asset: Make sure the assets directory is declared in the root pubspec.yaml:",
+        "readme.usage.title": "Usage Guidelines",
+        "readme.usage.bootstrap": "1. Bootstrapping (Dependency Injection): Initialize the theme engine at application startup in your main() method:",
+        "readme.usage.wrapping": "2. Wrapping your App: Expose the ThemeService through a ListenableBuilder to trigger rebuilds on variant changes:",
+        "readme.usage.consuming": "3. Consuming Semantic Roles in Widgets: To prevent coupling widgets to raw values, never hardcode colors. Import the theme engine package and consume named semantic roles via context.appTheme:",
+
+        "solution.title": "Solution Architecture",
+        "solution.overview.intro": "The Chameleon Theme Engine implements a robust 3-layer pipeline that decodes brand configurations and resolves them into semantic theme values for UI consumption. This architecture enforces strict separation of concerns, guarantees reliable error fallbacks, and supports dynamic tenant onboarding without modifying the core codebase.",
+        "solution.diagram.caption": "Figure 1: Token resolution pipeline from JSON asset to widget consumption.",
+        "solution.diagram.aria_label": "Flowchart showing Token pipeline: JSON config loads into ConfigService, maps to AppTokens, resolves as AppTheme ThemeExtension, consumed by Widgets via BuildContext.",
+        "solution.diagram.layer_data": "Data Layer (Parsing)",
+        "solution.diagram.layer_domain": "Domain Layer (Resolution)",
+        "solution.diagram.layer_presentation": "Presentation Layer (Consumption)",
+        
+        "solution.config_service.title": "ConfigService",
+        "solution.config_service.role": "<strong>Role:</strong> Responsible for loading and decoding tenant-specific JSON assets from the filesystem or a remote endpoint.",
+        "solution.config_service.inputs": "<strong>Inputs:</strong> Accepts one of the following:<br>1. <strong>Local:</strong> A tenant key (e.g., 'xbank') passed to <code>load()</code> to resolve local asset paths.<br>2. <strong>Remote/Dynamic:</strong> A raw JSON string conforming to the Chameleon Theme schema passed to <code>loadFromJson()</code>.",
+        "solution.config_service.outputs": "<strong>Outputs:</strong> A parsed and validated ThemeConfig envelope model.",
+        "solution.config_service.behaviors": "<strong>Key Behaviors:</strong> Rethrows file-level loading or parsing errors (deliberate startup crash for broken files). However, it delegates parsing to envelope models which ignore unknown keys, allowing dynamic custom fields.",
+        
+        "solution.app_tokens.title": "AppTokens",
+        "solution.app_tokens.role": "<strong>Role:</strong> Represents the raw, primitive design tokens (color codes, spacing units, radii) specified in the active variant.",
+        "solution.app_tokens.inputs": "<strong>Inputs:</strong> Serialized JSON maps from ThemeConfig.",
+        "solution.app_tokens.outputs": "<strong>Outputs:</strong> Type-safe Dart representation of brand constants.",
+        "solution.app_tokens.behaviors": "<strong>Key Behaviors:</strong> Every token field has a per-token fallback to ThemeDefaults. Missing or malformed tokens degrade gracefully to safe neutral monochrome defaults, logging details via dart:developer without crashing the app.",
+        
+        "solution.app_theme.title": "AppTheme",
+        "solution.app_theme.role": "<strong>Role:</strong> Implements ThemeExtension to expose resolved semantic UI roles directly to widgets.",
+        "solution.app_theme.inputs": "<strong>Inputs:</strong> AppTokens + a semanticMap (maps semantic roles to raw tokens).",
+        "solution.app_theme.outputs": "<strong>Outputs:</strong> A Flutter ThemeExtension accessible via BuildContext.",
+        "solution.app_theme.behaviors": "<strong>Key Behaviors:</strong> Resolves semantic roles (e.g., buttonBackground) dynamically. The lerp method snaps at t=0.5, creating instant transition-free cut switches (paired with themeAnimationDuration: Duration.zero). Provides customColor and customValue lookups.",
+        
+        "solution.tenant_registry.title": "TenantThemeRegistry",
+        "solution.tenant_registry.role": "<strong>Role:</strong> Holds all parsed theme variants (default, premium, etc.) and routing rules for the current tenant.",
+        "solution.tenant_registry.inputs": "<strong>Inputs:</strong> Raw configuration models and tenant key.",
+        "solution.tenant_registry.outputs": "<strong>Outputs:</strong> Theme variants lookup map and resolution rules.",
+        "solution.tenant_registry.behaviors": "<strong>Key Behaviors:</strong> Implements the fallback resolution chain: requested variant → rules.defaultVariant → ThemeDefaults.appTokens on registry miss.",
+        
+        "solution.theme_rules.title": "ThemeRules",
+        "solution.theme_rules.role": "<strong>Role:</strong> Maps user segments and demographic attributes to the appropriate theme variant.",
+        "solution.theme_rules.inputs": "<strong>Inputs:</strong> UserContext segment wrapper.",
+        "solution.theme_rules.outputs": "<strong>Outputs:</strong> Variant name (string).",
+        "solution.theme_rules.behaviors": "<strong>Key Behaviors:</strong> Evaluates condition mappings parsed from JSON. Schema structure supports a 'default' variant and matching conditions for user segments.",
+        
+        "solution.theme_service.title": "ThemeService",
+        "solution.theme_service.role": "<strong>Role:</strong> A ChangeNotifier orchestrator that manages active theme state and variant switches.",
+        "solution.theme_service.inputs": "<strong>Inputs:</strong> Initial active theme, optional TenantThemeRegistry.",
+        "solution.theme_service.outputs": "<strong>Outputs:</strong> Active AppTheme, notifications to listeners.",
+        "solution.theme_service.behaviors": "<strong>Key Behaviors:</strong> Buffers calls to applyForUser if registry is not ready (as _pendingUser). Restores saved variant from shared_preferences on init. Drives UI rebuilds via ListenableBuilder.",
+        
+        "solution.fallback.title": "Fallback & Degradation Strategy",
+        "solution.fallback.intro": "The engine implements a 3-tier fallback hierarchy to ensure reliability:<br><strong>1. File-level:</strong> ConfigService rethrows file loading failures. This is intentional to cause a startup crash so developers notice config loading issues immediately.<br><strong>2. Variant-level:</strong> If a user resolves to a variant that is missing from TenantThemeRegistry, it falls back to the rules.defaultVariant, and then to ThemeDefaults.appTokens.<br><strong>3. Token-level:</strong> If individual tokens (color or spacing) are missing or invalid, they degrade gracefully to safe neutral monochrome defaults from ThemeDefaults and log to console without crashing.",
+        
+        "solution.multi_tenant.title": "Multi-Tenant Variant Resolution",
+        "solution.multi_tenant.intro": "Variant resolution happens dynamically at runtime. When a client calls <code>ThemeService.applyForUser(user)</code>, the service delegates to <code>TenantThemeRegistry.resolve(user)</code>. The registry evaluates <code>ThemeRules</code> against user segments. The selected variant's tokens are loaded into a new <code>AppTheme</code> instance, which is set as the active theme. Because <code>lerp</code> snaps at 0.5, widgets update instantly with no animation flicker.",
+
+        "workflow.title": "Development Workflow",
+        "workflow.intro": "This section outlines the common terminal commands and contribution policies for developers working on the Chameleon Theme Engine.",
+        "workflow.commands.pub_get": "Install Flutter package dependencies.",
+        "workflow.commands.build_runner": "Regenerate JSON serialization code (*.g.dart files).",
+        "workflow.commands.test": "Run all tests (unit, widget, and compliance checks).",
+        "workflow.commands.analyze": "Run static code analysis and custom lints.",
+        "workflow.commands.run_example": "Run the showcase interactive app to test themes.",
+        
+        "workflow.precommit.title": "Pre-Commit Checks",
+        "workflow.precommit.rule1": "No <code>!</code> (bang) operators in Dart code (strict sound null safety).",
+        "workflow.precommit.rule2": "No <code>print</code> calls (must use <code>dart:developer</code> <code>log</code>).",
+        "workflow.precommit.rule3": "No raw <code>Color</code> literals outside the theme library.",
+        "workflow.precommit.rule4": "Static analysis (<code>flutter analyze</code>) must pass with zero errors.",
+        "workflow.precommit.rule5": "All tests (<code>flutter test</code>) must pass successfully.",
+        
+        "workflow.prohibitions.title": "Prohibited Practices & Enforcement",
+        "workflow.prohibitions.bang": "<strong>No Force Unwraps (!):</strong> Sound null safety must be maintained using flow analysis, fallback variables, or conditional access.",
+        "workflow.prohibitions.print": "<strong>No Raw print():</strong> Use <code>dart:developer</code> <code>log()</code> with <code>name: 'theme_engine'</code>. This avoids polluting production logs and allows console filtering.",
+        "workflow.prohibitions.color": "<strong>No Hardcoded Colors:</strong> Widgets must only consume semantic roles. Adding raw <code>Color(0xFF...)</code> anywhere outside the theme library fails the compliance checks."
+      },
+      vi: {
+        "meta.title": "Chameleon Theme Engine",
+        "meta.description": "Tài liệu kỹ thuật song ngữ dành cho Chameleon Theme Engine.",
+        "meta.lang_toggle_en": "EN",
+        "meta.lang_toggle_vi": "VI",
+        "nav.readme": "README",
+        "nav.solution": "Giải pháp",
+        "nav.workflow": "Quy trình",
+        "nav.solution_config_service": "ConfigService",
+        "nav.solution_app_tokens": "AppTokens",
+        "nav.solution_app_theme": "AppTheme",
+        "nav.solution_tenant_registry": "TenantThemeRegistry",
+        "nav.solution_theme_rules": "ThemeRules",
+        "nav.solution_theme_service": "ThemeService",
+        
+        "readme.title": "Tổng quan dự án",
+        "readme.overview.intro": "Một công cụ giao diện đa khách hàng (multi-tenant), linh hoạt và dựa trên quy tắc cho các ứng dụng Flutter. Hệ thống cho phép phân tích động các giá trị thương hiệu thô từ các tệp cấu hình JSON khai báo và ánh xạ chúng thành các vai trò giao diện (UI roles) ngữ nghĩa mà các widget tiêu thụ thông qua một extension của BuildContext. Nó cũng hỗ trợ chuyển đổi biến thể chủ đề trong thời gian chạy (ví dụ: default sang premium) dựa trên phân khúc người dùng với bộ nhớ lưu trữ cục bộ và các extension chủ đề tùy chỉnh động.",
+        "readme.features.title": "Các tính năng chính",
+        "readme.features.1": "Tích hợp khai báo: Tích hợp một khách hàng (tenant) mới chỉ bằng cách thêm một tệp JSON duy nhất mà không cần thay đổi bất kỳ mã nguồn widget nào.",
+        "readme.features.2": "Chuyển đổi thời gian chạy theo quy tắc: Chuyển đổi ngay lập tức các biến thể giao diện (ví dụ: default sang premium) khi phân khúc người dùng được xác định, với các cập nhật UI tức thì không có độ trễ chuyển cảnh.",
+        "readme.features.3": "Cô lập widget nghiêm ngặt: Ngăn chặn việc sử dụng mã màu và khoảng cách thô trong mã widget bằng cách sử dụng các kiểm tra tuân thủ tự động. Widgets chỉ tiêu thụ các vai trò ngữ nghĩa có tên.",
+        "readme.features.4": "Phục hồi theo Token mạnh mẽ: Các token riêng lẻ bị thiếu hoặc bị lỗi sẽ tự động hạ cấp xuống các giá trị mặc định đơn sắc an toàn, ghi nhận chi tiết lỗi mà không làm sập ứng dụng.",
+        "readme.features.5": "Tiện ích mở rộng tùy chỉnh động: Truy vấn cấu hình tùy chỉnh, phi tiêu chuẩn tùy ý bên trong tệp JSON của tenant thông qua các tra cứu động an toàn kiểu dữ liệu (type-safe).",
+        "readme.features.6": "Trạng thái được lưu trữ: Tự động lưu trữ và khôi phục khóa biến thể đang hoạt động bằng cách sử dụng shared_preferences.",
+        "readme.dir.intro": "Dưới đây là cấu trúc thư mục thể hiện cách tổ chức của Chameleon Theme Engine:",
+        "readme.onboarding.title": "Tích hợp một khách hàng (Tenant) mới",
+        "readme.onboarding.intro": "Để cấu hình một tenant mới (ví dụ: mybrand):",
+        "readme.onboarding.step1": "1. Thêm cấu hình JSON của Tenant: Tạo file assets/configs/tenants/mybrand.json và khai báo các biến thể, ánh xạ quy tắc và bản đồ ngữ nghĩa (semantic map):",
+        "readme.onboarding.step2": "2. Đăng ký Asset: Đảm bảo thư mục assets được khai báo trong tệp pubspec.yaml ở thư mục gốc:",
+        "readme.usage.title": "Hướng dẫn sử dụng",
+        "readme.usage.bootstrap": "1. Khởi động (Dependency Injection): Khởi tạo theme engine khi ứng dụng khởi động trong phương thức main() của bạn:",
+        "readme.usage.wrapping": "2. Bao bọc ứng dụng của bạn: Cung cấp ThemeService thông qua một ListenableBuilder để kích hoạt việc dựng lại giao diện (rebuild) khi biến thể thay đổi:",
+        "readme.usage.consuming": "3. Tiêu thụ các vai trò ngữ nghĩa trong Widget: Để tránh liên kết các widget với các giá trị thô, tuyệt đối không viết cứng mã màu (hardcode). Hãy import gói theme engine và sử dụng các vai trò ngữ nghĩa có tên thông qua context.appTheme:",
+
+        "solution.title": "Kiến trúc giải pháp",
+        "solution.overview.intro": "Chameleon Theme Engine triển khai một đường dẫn (pipeline) 3 lớp mạnh mẽ giúp giải mã các cấu hình thương hiệu và chuyển đổi chúng thành các giá trị giao diện ngữ nghĩa cho UI tiêu thụ. Kiến trúc này thực thi sự phân tách rõ ràng giữa các thành phần, đảm bảo cơ chế phục hồi lỗi đáng tin cậy và hỗ trợ tích hợp tenant động mà không cần sửa đổi mã nguồn cốt lõi.",
+        "solution.diagram.caption": "Hình 1: Quy trình phân giải token từ tệp JSON cấu hình đến khi widget tiêu thụ.",
+        "solution.diagram.aria_label": "Sơ đồ luồng Token pipeline: Tải cấu hình JSON vào ConfigService, ánh xạ tới AppTokens, phân giải thành AppTheme ThemeExtension, và được Widgets tiêu thụ qua BuildContext.",
+        "solution.diagram.layer_data": "Lớp Dữ liệu (Phân tích)",
+        "solution.diagram.layer_domain": "Lớp Nghiệp vụ (Phân giải)",
+        "solution.diagram.layer_presentation": "Lớp Hiển thị (Tiêu thụ)",
+        
+        "solution.config_service.title": "ConfigService",
+        "solution.config_service.role": "<strong>Vai trò:</strong> Chịu trách nhiệm tải và giải mã các tệp JSON cấu hình của từng khách hàng từ hệ thống tệp hoặc từ một điểm cuối (endpoint) từ xa.",
+        "solution.config_service.inputs": "<strong>Đầu vào:</strong> Chấp nhận một trong hai đầu vào:<br>1. <strong>Cục bộ:</strong> Khóa khách hàng (ví dụ: 'xbank') truyền vào <code>load()</code> để xác định đường dẫn asset cục bộ.<br>2. <strong>Từ xa/Động:</strong> Chuỗi JSON gốc tuân thủ đúng cấu trúc Chameleon Theme truyền vào <code>loadFromJson()</code>.",
+        "solution.config_service.outputs": "<strong>Đầu ra:</strong> Một mô hình lớp bọc ThemeConfig đã được phân tích và kiểm tra tính hợp lệ.",
+        "solution.config_service.behaviors": "<strong>Hành vi chính:</strong> Ném lại (rethrow) lỗi ở cấp độ tải hoặc phân tích tệp (chủ động làm sập ứng dụng lúc khởi động đối với các tệp cấu hình bị hỏng). Tuy nhiên, nó cho phép các mô hình lớp bọc bỏ qua các khóa không xác định, hỗ trợ các trường cấu hình tùy chỉnh động.",
+        
+        "solution.app_tokens.title": "AppTokens",
+        "solution.app_tokens.role": "<strong>Vai trò:</strong> Đại diện cho các token thiết kế nguyên bản, thô (mã màu, đơn vị khoảng cách, bo góc) được chỉ định trong biến thể đang hoạt động.",
+        "solution.app_tokens.inputs": "<strong>Đầu vào:</strong> Bản đồ JSON đã tuần tự hóa từ ThemeConfig.",
+        "solution.app_tokens.outputs": "<strong>Đầu ra:</strong> Biểu diễn Dart an toàn kiểu dữ liệu (type-safe) của các hằng số thương hiệu.",
+        "solution.app_tokens.behaviors": "<strong>Hành vi chính:</strong> Mỗi trường token đều có cơ chế phục hồi riêng lẻ về ThemeDefaults. Các token bị thiếu hoặc bị lỗi sẽ tự động hạ cấp xuống các giá trị mặc định đơn sắc an toàn từ ThemeDefaults và ghi nhận lỗi qua thư viện dart:developer mà không làm sập ứng dụng.",
+        
+        "solution.app_theme.title": "AppTheme",
+        "solution.app_theme.role": "<strong>Vai trò:</strong> Triển khai ThemeExtension để cung cấp các vai trò ngữ nghĩa UI trực tiếp đến các widget.",
+        "solution.app_theme.inputs": "<strong>Đầu vào:</strong> AppTokens kết hợp với một semanticMap (bản đồ ánh xạ các vai trò ngữ nghĩa sang các token thô).",
+        "solution.app_theme.outputs": "<strong>Đầu ra:</strong> Một ThemeExtension của Flutter có thể truy cập thông qua BuildContext.",
+        "solution.app_theme.behaviors": "<strong>Hành vi chính:</strong> Phân giải các vai trò ngữ nghĩa (ví dụ: buttonBackground) một cách động. Phương thức lerp sẽ tự động làm tròn giá trị tại t=0.5, tạo ra sự chuyển đổi tức thì không có hiệu ứng chuyển cảnh (kết hợp với themeAnimationDuration: Duration.zero). Hỗ trợ tra cứu customColor và customValue.",
+        
+        "solution.tenant_registry.title": "TenantThemeRegistry",
+        "solution.tenant_registry.role": "<strong>Vai trò:</strong> Lưu trữ tất cả các biến thể giao diện đã phân tích (default, premium, v.v.) và các quy tắc điều hướng cho khách hàng hiện tại.",
+        "solution.tenant_registry.inputs": "<strong>Đầu vào:</strong> Các mô hình cấu hình thô và khóa khách hàng.",
+        "solution.tenant_registry.outputs": "<strong>Đầu ra:</strong> Bản đồ tra cứu các biến thể giao diện và các quy tắc phân giải giao diện tương ứng.",
+        "solution.tenant_registry.behaviors": "<strong>Hành vi chính:</strong> Thực hiện chuỗi phân giải phục hồi: biến thể được yêu cầu → rules.defaultVariant → ThemeDefaults.appTokens nếu không tìm thấy trong registry.",
+        
+        "solution.theme_rules.title": "ThemeRules",
+        "solution.theme_rules.role": "<strong>Vai trò:</strong> Ánh xạ các phân khúc người dùng và thuộc tính nhân khẩu học sang biến thể giao diện phù hợp.",
+        "solution.theme_rules.inputs": "<strong>Đầu vào:</strong> Đối tượng bọc ngữ cảnh người dùng UserContext.",
+        "solution.theme_rules.outputs": "<strong>Đầu ra:</strong> Tên biến thể giao diện (chuỗi).",
+        "solution.theme_rules.behaviors": "<strong>Hành vi chính:</strong> Đánh giá các quy tắc ánh xạ điều kiện được phân tích từ tệp JSON. Cấu trúc Schema hỗ trợ một biến thể mặc định ('default') và các điều kiện so khớp cho phân khúc người dùng.",
+        
+        "solution.theme_service.title": "ThemeService",
+        "solution.theme_service.role": "<strong>Vai trò:</strong> Một điều phối viên ChangeNotifier quản lý trạng thái giao diện đang hoạt động và xử lý việc chuyển đổi biến thể.",
+        "solution.theme_service.inputs": "<strong>Đầu vào:</strong> Giao diện hoạt động ban đầu, và TenantThemeRegistry tùy chọn.",
+        "solution.theme_service.outputs": "<strong>Đầu ra:</strong> Đối tượng AppTheme đang hoạt động, phát thông báo tới các đối tượng lắng nghe.",
+        "solution.theme_service.behaviors": "<strong>Hành vi chính:</strong> Đệm các lệnh gọi applyForUser nếu registry chưa sẵn sàng (dưới dạng _pendingUser). Khôi phục biến thể đã lưu từ shared_preferences khi khởi tạo. Kích hoạt dựng lại giao diện ứng dụng thông qua ListenableBuilder.",
+        
+        "solution.fallback.title": "Chiến lược phục hồi & Hạ cấp lỗi",
+        "solution.fallback.intro": "Theme engine triển khai một phân cấp phục hồi 3 tầng để đảm bảo độ tin cậy của ứng dụng:<br><strong>1. Cấp độ tệp:</strong> ConfigService ném lại các lỗi tải tệp. Điều này là có chủ ý nhằm làm sập ứng dụng ngay khi khởi động để các nhà phát triển phát hiện vấn đề cấu hình ngay lập tức.<br><strong>2. Cấp độ biến thể:</strong> Nếu một người dùng được phân giải tới một biến thể không tồn tại trong TenantThemeRegistry, hệ thống sẽ hạ cấp về rules.defaultVariant, và tiếp theo là ThemeDefaults.appTokens.<br><strong>3. Cấp độ token:</strong> Nếu từng token riêng lẻ (màu sắc hoặc khoảng cách) bị thiếu hoặc không hợp lệ, chúng sẽ tự động hạ cấp xuống các giá trị mặc định đơn sắc an toàn từ ThemeDefaults và ghi nhận lỗi ra console mà không làm sập ứng dụng.",
+        
+        "solution.multi_tenant.title": "Phân giải biến thể đa khách hàng",
+        "solution.multi_tenant.intro": "Việc phân giải biến thể diễn ra động trong thời gian chạy. Khi máy khách gọi <code>ThemeService.applyForUser(user)</code>, dịch vụ sẽ ủy quyền cho <code>TenantThemeRegistry.resolve(user)</code>. Registry sẽ đánh giá <code>ThemeRules</code> đối với các phân khúc người dùng. Các token của biến thể được chọn sẽ được tải vào một đối tượng <code>AppTheme</code> mới và được thiết lập làm giao diện hoạt động. Vì <code>lerp</code> làm tròn tại 0.5, các widget sẽ cập nhật ngay lập tức mà không gặp hiện tượng nhấp nháy chuyển cảnh.",
+
+        "workflow.title": "Quy trình phát triển",
+        "workflow.intro": "Phần này phác thảo các lệnh terminal phổ biến và các chính sách đóng góp dành cho các nhà phát triển làm việc trên Chameleon Theme Engine.",
+        "workflow.commands.pub_get": "Cài đặt các gói phụ thuộc (dependencies) của Flutter.",
+        "workflow.commands.build_runner": "Tái tạo mã nguồn tuần tự hóa JSON (các tệp *.g.dart).",
+        "workflow.commands.test": "Chạy tất cả các bài kiểm thử (unit test, widget test và compliance check).",
+        "workflow.commands.analyze": "Chạy phân tích mã nguồn tĩnh và các custom lints.",
+        "workflow.commands.run_example": "Chạy ứng dụng showcase tương tác để kiểm thử giao diện.",
+        
+        "workflow.precommit.title": "Kiểm tra trước khi commit (Pre-Commit)",
+        "workflow.precommit.rule1": "Không sử dụng toán tử <code>!</code> trong mã Dart (đảm bảo an toàn null tuyệt đối).",
+        "workflow.precommit.rule2": "Không sử dụng lệnh gọi <code>print</code> (phải dùng <code>dart:developer</code> <code>log</code>).",
+        "workflow.precommit.rule3": "Không viết cứng mã màu thô bên ngoài thư viện theme.",
+        "workflow.precommit.rule4": "Phân tích tĩnh (<code>flutter analyze</code>) phải vượt qua với 0 lỗi.",
+        "workflow.precommit.rule5": "Tất cả các bài kiểm thử (<code>flutter test</code>) phải vượt qua thành công.",
+        
+        "workflow.prohibitions.title": "Các hành vi bị cấm & Thực thi",
+        "workflow.prohibitions.bang": "<strong>Không ép buộc unwrap (!):</strong> Sự an toàn null âm thanh phải được duy trì bằng cách sử dụng phân tích luồng, biến phục hồi hoặc truy cập có điều kiện.",
+        "workflow.prohibitions.print": "<strong>Không dùng print() thô:</strong> Sử dụng <code>dart:developer</code> <code>log()</code> với <code>name: 'theme_engine'</code>. Điều này tránh làm loãng log môi trường production và cho phép lọc bảng điều khiển.",
+        "workflow.prohibitions.color": "<strong>Không viết cứng màu:</strong> Các widget chỉ được tiêu thụ các vai trò ngữ nghĩa. Việc thêm mã màu thô <code>Color(0xFF...)</code> ở bất kỳ đâu ngoài thư viện theme sẽ làm thất bại kiểm tra tuân thủ."
+      }
+    };
+
+    // Public API exposed on window - for testability
+    window.chameleonDocs = {
+      currentLang: 'en',
+      
+      // Get translation for key
+      t(key, lang) {
+        const targetLang = lang || this.currentLang;
+        const resolved = translations[targetLang]?.[key] ?? translations['en']?.[key] ?? '';
+        return resolved;
+      },
+
+      // Set language
+      setLanguage(lang) {
+        if (lang !== 'en' && lang !== 'vi') return;
+        applyLanguage(lang);
+      },
+
+      // Toggle language
+      toggleLanguage() {
+        const nextLang = this.currentLang === 'en' ? 'vi' : 'en';
+        applyLanguage(nextLang);
+      },
+
+      // Read-only reference
+      get translations() {
+        return translations;
+      }
+    };
+
+    // Apply Language
+    function applyLanguage(lang) {
+      window.chameleonDocs.currentLang = lang;
+      
+      // Update all data-i18n elements
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const resolved = window.chameleonDocs.t(key, lang);
+        
+        // If element is svg, handle it differently or update its title/aria
+        if (el.tagName.toLowerCase() === 'svg') {
+          el.setAttribute('aria-label', resolved);
+        } else {
+          el.innerHTML = resolved;
+        }
+      });
+
+      // Update html lang attribute
+      document.documentElement.setAttribute('lang', lang);
+
+      // Update lang toggle buttons
+      const toggleBtn = document.getElementById('lang-toggle');
+      const toggleMobileBtn = document.getElementById('lang-toggle-mobile');
+
+      if (lang === 'vi') {
+        if (toggleBtn) {
+          toggleBtn.setAttribute('aria-label', 'Switch to English');
+          const span = toggleBtn.querySelector('span');
+          if (span) span.textContent = 'VI';
+        }
+        if (toggleMobileBtn) {
+          toggleMobileBtn.setAttribute('aria-label', 'Switch to English');
+          toggleMobileBtn.textContent = 'VI';
+        }
+      } else {
+        if (toggleBtn) {
+          toggleBtn.setAttribute('aria-label', 'Switch to Vietnamese');
+          const span = toggleBtn.querySelector('span');
+          if (span) span.textContent = 'EN';
+        }
+        if (toggleMobileBtn) {
+          toggleMobileBtn.setAttribute('aria-label', 'Switch to Vietnamese');
+          toggleMobileBtn.textContent = 'EN';
+        }
+      }
+
+      // Persist to localStorage with try-catch block to handle private browsing
+      try {
+        localStorage.setItem('lang', lang);
+      } catch (e) {
+        // Silent fail if storage is blocked
+      }
+    }
+
+    // Initialize Language
+    function initLanguage() {
+      let initialLang = 'en';
+      
+      try {
+        const savedLang = localStorage.getItem('lang');
+        if (savedLang === 'en' || savedLang === 'vi') {
+          initialLang = savedLang;
+        } else {
+          // Detect via browser
+          if (navigator.language && navigator.language.startsWith('vi')) {
+            initialLang = 'vi';
+          }
+        }
+      } catch (e) {
+        // Fallback to browser check if localStorage is blocked
+        if (navigator.language && navigator.language.startsWith('vi')) {
+          initialLang = 'vi';
+        }
+      }
+
+      applyLanguage(initialLang);
+    }
+
+    // Mobile Sidebar Toggle
+    function toggleSidebar(forceClose = false) {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      const hamburger = document.getElementById('hamburger-btn');
+      
+      if (!sidebar || !overlay || !hamburger) return;
+
+      const isOpen = sidebar.classList.contains('open');
+
+      if (forceClose || isOpen) {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+        hamburger.setAttribute('aria-label', 'Open navigation');
+      } else {
+        sidebar.classList.add('open');
+        overlay.classList.add('active');
+        hamburger.setAttribute('aria-label', 'Close navigation');
+      }
+    }
+
+    // IntersectionObserver for Sidebar Highlighting
+    function initScrollObserver() {
+      const sections = ['readme', 'solution', 'workflow'];
+      const subSections = [
+        'solution-config-service',
+        'solution-app-tokens',
+        'solution-app-theme',
+        'solution-tenant-registry',
+        'solution-theme-rules',
+        'solution-theme-service'
+      ];
+      
+      const observerOptions = {
+        rootMargin: '-10% 0px -80% 0px',
+        threshold: 0
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute('id');
+            
+            // Remove active classes
+            if (sections.includes(id)) {
+              document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+              const activeLink = document.querySelector(`.nav-item[href="#${id}"]`);
+              if (activeLink) activeLink.classList.add('active');
+            } else if (subSections.includes(id)) {
+              document.querySelectorAll('.nav-sub').forEach(el => el.classList.remove('active'));
+              const activeSubLink = document.querySelector(`.nav-sub[href="#${id}"]`);
+              if (activeSubLink) activeSubLink.classList.add('active');
+            }
+          }
+        });
+      }, observerOptions);
+
+      // Observe top-level sections
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+
+      // Observe subsections
+      subSections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+    }
+
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      // Init language state
+      initLanguage();
+
+      // Init scroll observer
+      initScrollObserver();
+
+      // Language toggles click listeners
+      const toggleBtn = document.getElementById('lang-toggle');
+      const toggleMobileBtn = document.getElementById('lang-toggle-mobile');
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => window.chameleonDocs.toggleLanguage());
+      }
+      if (toggleMobileBtn) {
+        toggleMobileBtn.addEventListener('click', () => window.chameleonDocs.toggleLanguage());
+      }
+
+      // Hamburger button and Overlay clicks
+      const hamburger = document.getElementById('hamburger-btn');
+      const overlay = document.getElementById('overlay');
+
+      if (hamburger) {
+        hamburger.addEventListener('click', () => toggleSidebar());
+      }
+      if (overlay) {
+        overlay.addEventListener('click', () => toggleSidebar(true));
+      }
+
+      // Close sidebar on link clicks (for mobile navigation)
+      document.querySelectorAll('.nav-item, .nav-sub').forEach(link => {
+        link.addEventListener('click', () => toggleSidebar(true));
+      });
+    });
+  </script>
+</body>
+</html>
